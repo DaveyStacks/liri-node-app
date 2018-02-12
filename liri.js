@@ -7,9 +7,7 @@ var moment = require('moment');
 var spotifyKeys = keys.spotify;
 var twitter = keys.twitter;
 var Spotify = require('node-spotify-api');
-// console.log(spotifyKeys.id);
-// console.log(spotifyKeys.secret);
-// console.log(twitter);
+
 let blankTitleArray = [];
 var client = new Twitter({
     consumer_key: twitter.consumer_key,
@@ -42,8 +40,8 @@ const searchLiri = (action, title) => {
                     return console.log(error);
                 }
 
-                var titleProb = data.split(/\s*"\s*/)
-                var titleProbArr = ` ${titleProb[1]}`.split(" ");
+                var titleProb = data.split(/\s*"\s*/);
+                var titleProbArr = (" " + titleProb[1]).split(" ");
                 title = titleProbArr;
                 spotifySong(title);
             });
@@ -136,9 +134,14 @@ const showTweets = () => {
     var params = { screen_name: 'AliasDavey' };
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
+
+            function parseTwitterDate(aDate) {
+                return new Date(Date.parse(aDate.replace(/( \+)/, ' UTC$1')));
+            }
+
             for (let index = 0; index < tweets.length; index++) {
                 console.log("----------------------------------------------------------")
-                console.log(tweets[index].created_at);
+                console.log(moment(parseTwitterDate(tweets[index].created_at)).format('dddd MMMM Do YYYY @ h:mm A'));
                 console.log(tweets[index].text);
             }
         }
@@ -148,12 +151,11 @@ const showTweets = () => {
 
 const spotifySong = (title) => {
     let songTitle = (title.slice(1));
-    console.log(songTitle);
     if (songTitle.length < 1) {
-        var songEncodedTitle = "Ace+of+Base+The+Sign";
+        songEncodedTitle = "Ace+of+Base+The+Sign";
     }
     else {
-        var songEncodedTitle = songTitle.join("+");
+        songEncodedTitle = songTitle.join("+");
     }
 
     var spotify = new Spotify({
