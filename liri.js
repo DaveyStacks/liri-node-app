@@ -2,7 +2,6 @@ require("dotenv").config();
 const fs = require('fs');
 var keys = require("./keys");
 const request = require('request');
-
 var Twitter = require('twitter');
 var moment = require('moment');
 var spotifyKeys = keys.spotify;
@@ -11,7 +10,7 @@ var Spotify = require('node-spotify-api');
 // console.log(spotifyKeys.id);
 // console.log(spotifyKeys.secret);
 // console.log(twitter);
-
+let blankTitleArray = [];
 var client = new Twitter({
     consumer_key: twitter.consumer_key,
     consumer_secret: twitter.consumer_secret,
@@ -37,8 +36,17 @@ const searchLiri = (action, title) => {
             searchMovie(title);
             break;
         case "do-what-it-says":
-            title = ["I", "want", "it", "that", "way"];
-            spotifySong(title);
+            fs.readFile('random.txt', 'utf8', function (error, data) {
+
+                if (error) {
+                    return console.log(error);
+                }
+
+                var titleProb = data.split(/\s*"\s*/)
+                var titleProbArr = ` ${titleProb[1]}`.split(" ");
+                title = titleProbArr;
+                spotifySong(title);
+            });
             break;
         default:
             console.log(`Please enter one of the following arguments -- my-tweets, spotify-this-song, movie-this, do-what-it-says.`)
@@ -140,6 +148,7 @@ const showTweets = () => {
 
 const spotifySong = (title) => {
     let songTitle = (title.slice(1));
+    console.log(songTitle);
     if (songTitle.length < 1) {
         var songEncodedTitle = "Ace+of+Base+The+Sign";
     }
