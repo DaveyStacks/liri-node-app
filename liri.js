@@ -53,7 +53,9 @@ const searchLiri = (action, title) => {
 };
 
 const searchMovie = (title) => {
+    console.log(title);
     let movieTitle = (title.slice(1));
+    console.log(movieTitle);
     let encodedTitle = movieTitle.join("+");
     let printedTitle = movieTitle.join(' ')
     const queryUrl = "http://www.omdbapi.com/?t=" + encodedTitle + "&y=&plot=short&apikey=trilogy";
@@ -66,9 +68,12 @@ const searchMovie = (title) => {
 
         if (!e && r.statusCode === 200) {
             if ((JSON.parse(b).Error) === "Movie not found!") {
+
                 console.log("We cannot find a move of that name! Sorry!");
+                console.log(`If you are trying to search using \' please use the escape key \\\ before the \' `);
             } else {
                 const jp = JSON.parse(b)
+
                 if (jp.Year) {
                     console.log(`The movie ${printedTitle} was released ${jp.Year}`);
                 }
@@ -141,7 +146,7 @@ const showTweets = () => {
 
             for (let index = 0; index < tweets.length; index++) {
                 console.log("----------------------------------------------------------")
-                console.log(moment(parseTwitterDate(tweets[index].created_at)).format('dddd MMMM Do YYYY @ h:mm A'));
+                console.log(moment(parseTwitterDate(tweets[index].created_at)).format('dddd, MMMM Do YYYY @ h:mm A'));
                 console.log(tweets[index].text);
             }
         }
@@ -150,6 +155,7 @@ const showTweets = () => {
 
 
 const spotifySong = (title) => {
+
     let songTitle = (title.slice(1));
     if (songTitle.length < 1) {
         songEncodedTitle = "Ace+of+Base+The+Sign";
@@ -185,3 +191,4 @@ const spotifySong = (title) => {
 
 
 searchLiri(process.argv[2], process.argv.slice(2));
+
